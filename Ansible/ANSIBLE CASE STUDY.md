@@ -1,19 +1,21 @@
-ANSIBLE CASE STUDY 
+# ANSIBLE CASE STUDY 
 You are a Devops Engineer and the organization you are working on needs to set up two configuration 
 management server groups. One for Apache another for Nginx. Being a Devops Engineer it is your task 
 to deal with this configuration management issue. 
 Let us see the tasks that you need to perform using Ansible. 
-1. Create two Server Groups. One for Apache and another for Nginx. 
-2. Push two html files with their server information. 
-Make sure that you don’t forget to start the services once the installation is done. Also send post 
+### 1. Create two Server Groups. One for Apache and another for Nginx. 
+### 2. Push two html files with their server information. 
+
+Make sure that you don’t forget to start the *services* once the installation is done. Also send post 
 installation messages for both the server groups. 
-Using Ansible Roles accomplish the above the tasks. 
-Also, once the Apache server configuration is done you need to install Java on that server group using 
-ansible role in a playbook.
+Using *Ansible Roles* accomplish the above the tasks. 
+Also, once the Apache server configuration is done you need to install *Java* on that server group using 
+ansible role in a *playbook*.
 
 
-Created an inventory file to define the target hosts and group them as apache and nginx:
+Created an *inventory file* to define the target hosts and group them as apache and nginx:
 
+```console
 [apache]
 apache_node_1
 apache_node_2
@@ -21,10 +23,12 @@ apache_node_2
 [nginx]
 nginx_node_1
 nginx_node_2
+```
 
 Created a role called ansible-apache to install Apache and push the HTML file with server information to the target hosts in the apache group
 i defined the tasks for installing Apache and pushing the HTML file in ansible-apache/tasks/main.yml as follows:
 
+```markdown
 ---
 - name: Install Apache
   become: true
@@ -46,10 +50,12 @@ i defined the tasks for installing Apache and pushing the HTML file in ansible-a
 - name: Post installation message
   debug:
     msg: "Apache installation and configuration completed successfully."
+```
 
 Created another role called ansible-nginx to install Nginx and push the HTML file with server information to the target hosts in the nginx group
 i defined the tasks for installing Nginx and pushing the HTML file in ansible-nginx/tasks/main.yml as follows:
 
+```markdown
 ---
 - name: Install Nginx
   become: true
@@ -71,10 +77,12 @@ i defined the tasks for installing Nginx and pushing the HTML file in ansible-ng
 - name: Post installation message
   debug:
     msg: "Nginx installation and configuration completed successfully."
+```
 
 Created a playbook called deployment.yml to deploy the roles on the target hosts based on the group
 i defined the playbook as follows:
 
+```markdown
 ---
 - name: Deploy roles
   hosts: all
@@ -82,17 +90,22 @@ i defined the playbook as follows:
   roles:
     - { role: ansible-apache, when: "'apache' in group_names" }
     - { role: ansible-nginx, when: "'nginx' in group_names" }
+```
 
 Created another role called ansible-java to install Java on the target hosts in the apache group
 i defined the tasks for installing Java in ansible-java/tasks/main.yml as follows:
 
+```markdown
 ---
 - name: Install Java
   become: true
   apt:
     name: default-jdk
     state: present
+```
 
 Finally, i executed the playbook using the ansible-playbook command 
 
+```bash
 ansible-playbook -i <path-to-inventory-file> deployment.yml
+```

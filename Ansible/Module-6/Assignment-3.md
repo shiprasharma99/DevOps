@@ -1,7 +1,7 @@
-Module-6: Ansible Assignment - 3 
+# Module-6: Ansible Assignment - 3 
 You have been asked to: 
-● Create Ansible Role called “ansible-new”
-● Install apache2 on slave1 and nginx on slave2 
+### 1. Create Ansible Role called “ansible-new”
+### 2. Install apache2 on slave1 and nginx on slave2 
 Above should be implemented using Ansible Roles
 
 
@@ -12,6 +12,7 @@ Create a new directory called ansible-new in your Ansible roles directory, which
 Inside this directory, create a tasks subdirectory and a file called main.yml inside it
 i added the following content to the main.yml file
 
+```markdown
 ---
 - name: Install Apache on slave1
   hosts: slave1
@@ -30,6 +31,7 @@ i added the following content to the main.yml file
       apt:
         name: nginx
         state: present
+```
 
 This role contains two tasks that will install Apache on slave1 and Nginx on slave2 using the apt module.
 
@@ -38,12 +40,14 @@ To use the ansible-new role in a playbook
 create a new playbook file, named use_role.yml, 
 added the following command:
 
+```markdown
 ---
 - name: Use Ansible role
   hosts: all
   become: true
   roles:
     - ansible-new
+```
 
 This playbook will run the ansible-new role on all the target nodes.
 
@@ -51,6 +55,8 @@ Step 3: Run the playbook
 To run the playbook and install Apache on slave1 and Nginx on slave2, 
 i ran the following command:
 
+```bash
 ansible-playbook -i <inventory_file> use_role.yml
+```
 Where <inventory_file> is the file that contains the list of target nodes.
 
