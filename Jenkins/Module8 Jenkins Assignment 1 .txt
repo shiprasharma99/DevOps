@@ -1,0 +1,67 @@
+Module-8: Jenkins Assignment - 1 
+You have been asked to: 
+● Trigger a pipeline using Git when push on Develop branch 
+● Pipeline should pull git content to a folder
+
+
+git init
+
+touch 1.txt
+
+git add .
+
+git commit -m "commiting to master"
+
+git checkout -b develop master
+
+vi touch
+
+create and connect an ubuntu ec2 instance
+
+inside the terminal, run
+
+1. sudo su
+2. apt-get update -y
+3. apt-get install openjdk-11-jdk -y
+4. wget -q -O - https://pkg.jenkins.io/debian-stable/jenkins.io.key | apt-key add -
+5. sh -c 'echo deb https://pkg.jenkins.io/debian-stable binary/ > \ e>
+/etc/apt/sources.list.d/jenkins.list'
+6. apt-get update -y
+
+Install Jenkins
+7. sudo apt-get install jenkins -y
+
+Now http://ip-address-of-my-ec2-user:8080
+
+sign up to jenkins, save new credential, and install suggested plugins
+
+install maven plugin and integrate it with github by pating the github url in the source code management
+
+copy the github url of the forked repository and clone it to the local system
+
+create a freestyle project in jenkins named "git-jen"
+edit the branch to develop, so that jenkins can only monitor the changes on the specific develop branch 
+
+in source code management, paste the github url and click on build now
+
+in ec2 instance
+use git remote add origin github url
+
+git push -u origin master
+
+login to github
+go to webhooks
+
+click add webhooks
+go to payload URL and add 
+http://ip-address-of-my-ec2-server:8080/github-webhook/
+
+now go to jenkins
+paste the github repo(forked as my own) in source code management
+
+and in build triggers click on the Github hook trigger for GITScm polling
+
+i have integrated jenkins and github with each other, now with every change in the code, jenkins will take its own build
+
+to pull the Git content to a folder using the Maven checkout goal.
+mvn checkout scm:checkout -DcheckoutDirectory=my-folder/

@@ -1,0 +1,102 @@
+Module-8: Jenkins Assignment - 2 
+You have been asked to: 
+● Add 2 nodes to Jenkins master 
+● Create 2 jobs with the following jobs: 
+○ Push to test 
+○ Push to prod 
+● Once a push is made to test branch copy git files to test server 
+● Once a push is made to master branch copy git files to prod server
+
+
+
+Install Jenkins on the master server
+1. sudo su
+2. apt-get update -y
+3. apt-get install openjdk-11-jdk -y
+4. wget -q -O - https://pkg.jenkins.io/debian-stable/jenkins.io.key | apt-key add -
+5. sh -c 'echo deb https://pkg.jenkins.io/debian-stable binary/ > \ e>
+/etc/apt/sources.list.d/jenkins.list'
+6. apt-get update -y
+
+Install Jenkins
+7. sudo apt-get install jenkins -y
+
+Install the SSH plugin for Jenkins
+In jenkins
+Click on "Manage Jenkins" then on "Manage Plugins" then go to "Available plugins" 
+search for "SSH" 
+in the list of plugins below, install ssh plugin "Install without restart" 
+Once the installation is complete, restart Jenkins with sudo systemctl restart jenkins
+
+Add 2 nodes to Jenkins master
+In Jenkins, go to Manage Jenkins > Manage Nodes and Clouds > New Node
+Enter the node name Test-Server, select "Permanent Agent" as the node type, 
+For the Test-Server node:
+
+Node name: Test-Server
+Node type: Permanent Agent
+Remote root directory: /path/to/test/server
+Labels: test
+Launch method: Launch agents via SSH
+Hostname: [IP-address-of-my-server]
+Port: 22 
+Credentials: [SSH private key]
+
+
+now for the seconf node
+i named it the Prod-Server node:
+
+Node name: Prod-Server
+Node type: Permanent Agent
+Remote root directory: var/libs/jenkins/
+Labels: prod
+Launch method: Launch agents via SSH
+Hostname: [IP-address-of-my-server]
+Port: 22 
+Credentials: [SSH private key]
+
+go to Vi /etc/ssh/sshd_config
+PermitRootLogin yes
+Port 22
+PasswordAuthentication yes
+
+and systemctl restart sshd  
+
+and istall git on the 2 nodes by apt-get install git
+
+for configuring the first job to copy Git files to the Test-server when a push is made to the test branch
+
+pipeline {
+  agent { node { label 'test-server' } }
+  stages {
+    stage('Checkout') {
+      steps {
+        checkout([$class: 'GitSCM', branches: [[name: 'test']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[url: 'my-git-url']]])
+      }
+    }
+    stage('Deploy to Test') {
+      steps {
+        sshPublisher(publishers: [sshPublisherDesc(configName: 'my-test-server', transfers: [sshTransfer(cleanRemote: false, excludes: '', execCommand: 'sudo systemctl restart my-app', execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+', remoteDirectory: '/opt/my-app', remoteDirectorySDF: false, removePrefix: '', sourceFiles: 'target/*.jar')])])
+      }
+    }
+  }
+}
+ 
+and for configuring the second job to copy Git files to the prod server when a push is made to the master branch
+
+pipeline {
+  agent { node { label 'prod-server' } }
+  stages {
+    stage('Checkout') {
+      steps {
+        checkout([$class: 'GitSCM', branches: [[name: 'master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[url: 'my-github-url']]])
+      }
+    }
+    stage('Deploy to Prod') {
+      steps {
+        sshPublisher(publishers: [sshPublisherDesc(configName: 'my-prod-server', transfers: [sshTransfer(cleanRemote: false, excludes: '', execCommand: 'sudo systemctl restart my-app', execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+', remoteDirectory: '/opt/my-app', remoteDirectorySDF: false, removePrefix: '', sourceFiles: 'target/*.jar')])])
+      }
+    }
+  }
+}
+

@@ -1,0 +1,60 @@
+Module-8: Jenkins Assignment - 3 
+You have been asked to:
+● Create a pipeline in jenkins 
+● Once push is made to “develop” branch in git, trigger job “test”. This will copy git files to 
+test node 
+● If test job is successful, then prod job should be triggered 
+● Prod jobs should copy files to prod node
+
+
+In Jenkins, Go to manage plugins -> go to available section -> search for build pipeline and install it without a restart
+
+go to "New Item" and select "Pipeline"
+
+Give the pipeline a name as "Assignment3" and click "OK"
+
+now, create a build pipeline and name it as pipeline-jenkins
+
+In the pipeline configuration page, select "Pipeline script" 
+Enter the following script in the text area:
+
+pipeline {
+  agent any
+  
+  stages {
+    stage('Test') {
+      when {
+        branch 'develop'
+      }
+      steps {
+        sh 'echo "Copying Git files to Test server..."'
+        sshagent(credentials: ['<ssh-credentials>']) {
+          sh 'scp <source-files-at-git> <ssh-username>@<ip-address-of-test-server>:<test-server-destination>'
+        }
+      }
+    }
+    
+    stage('Prod') {
+      when {
+        allOf {
+          branch 'master'
+          previousStageStatus 'SUCCESS'
+        }
+      }
+      steps {
+        sh 'echo "Copying Git files to Prod server..."'
+        sshagent(credentials: ['<ssh-credentials>']) {
+          sh 'scp <source-files> <ssh-username>@<prod-server-ip>:<prod-server-destination>'
+        }
+      }
+    }
+  }
+}
+
+Click "Save" to save the pipeline.
+With this pipeline, when a push is made to the "develop" branch in Git, the "Test" stage will be triggered. 
+This stage will copy Git files to the Test node. If the Test stage is successful, the "Prod" stage will be triggered, which will copy the Git files to the Prod node.
+
+
+
+

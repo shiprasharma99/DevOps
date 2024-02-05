@@ -1,0 +1,58 @@
+Module-6: Ansible Assignment - 5 
+You have been asked to: 
+● Create a new deployment of ansible cluster of 5 nodes 
+● Label 2 nodes as test and other 2 as prod 
+● Install java on test nodes 
+● Install mysql-server on prod nodes 
+Use Anisble roles for the above, group the hosts under test and prod
+
+
+Create an inventory file to define the target hosts and group them as test and prod:
+
+[test]
+test_node_1
+test_node_2
+
+[prod]
+prod_node_1
+prod_node_2
+
+Create a role called ansible-java to install Java on test nodes
+i defined the tasks for installing Java in ansible-java/tasks/main.yml as follows:
+
+---
+- name: Install Java
+  become: true
+  apt:
+    name: default-jdk
+    state: present
+
+Create another role called ansible-mysql to install MySQL on prod nodes
+i defined the tasks for installing MySQL in ansible-mysql/tasks/main.yml as follows:
+
+---
+- name: Install MySQL Server
+  become: true
+  apt:
+    name: mysql-server
+    state: present
+
+Create a playbook called deployment.yml to deploy the roles on the target hosts based on the group
+i defined the playbook as follows:
+
+---
+- name: Deploy roles
+  hosts: all
+  become: true
+  roles:
+    - { role: ansible-java, when: "'test' in group_names" }
+    - { role: ansible-mysql, when: "'prod' in group_names" }
+
+Finally, i executed the playbook using the ansible-playbook command as follows:
+
+ansible-playbook -i <path-to-inventory-file> deployment.yml
+
+
+
+
+
