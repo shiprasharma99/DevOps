@@ -17,7 +17,7 @@ Step 2: Copy the script to the target nodes
 To copy the script to the target nodes, you can use the copy module in Ansible. Create a new playbook file, named script.yml
 and i added the following script
 
-```css
+```
 ---
 - name: Copy script to all hosts
   hosts: all

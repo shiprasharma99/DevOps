@@ -12,7 +12,7 @@ Create a new directory called ansible-new in your Ansible roles directory, which
 Inside this directory, create a tasks subdirectory and a file called main.yml inside it
 i added the following content to the main.yml file
 
-```markdown
+```
 ---
 - name: Install Apache on slave1
   hosts: slave1
@@ -40,7 +40,7 @@ To use the ansible-new role in a playbook
 create a new playbook file, named use_role.yml, 
 added the following command:
 
-```markdown
+```
 ---
 - name: Use Ansible role
   hosts: all

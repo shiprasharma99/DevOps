@@ -15,7 +15,7 @@ ansible role in a *playbook*.
 
 Created an *inventory file* to define the target hosts and group them as apache and nginx:
 
-```console
+```
 [apache]
 apache_node_1
 apache_node_2
@@ -28,7 +28,7 @@ nginx_node_2
 Created a role called ansible-apache to install Apache and push the HTML file with server information to the target hosts in the apache group
 i defined the tasks for installing Apache and pushing the HTML file in ansible-apache/tasks/main.yml as follows:
 
-```markdown
+```
 ---
 - name: Install Apache
   become: true
@@ -55,7 +55,7 @@ i defined the tasks for installing Apache and pushing the HTML file in ansible-a
 Created another role called ansible-nginx to install Nginx and push the HTML file with server information to the target hosts in the nginx group
 i defined the tasks for installing Nginx and pushing the HTML file in ansible-nginx/tasks/main.yml as follows:
 
-```markdown
+```
 ---
 - name: Install Nginx
   become: true
@@ -82,7 +82,7 @@ i defined the tasks for installing Nginx and pushing the HTML file in ansible-ng
 Created a playbook called deployment.yml to deploy the roles on the target hosts based on the group
 i defined the playbook as follows:
 
-```markdown
+```
 ---
 - name: Deploy roles
   hosts: all
@@ -95,7 +95,7 @@ i defined the playbook as follows:
 Created another role called ansible-java to install Java on the target hosts in the apache group
 i defined the tasks for installing Java in ansible-java/tasks/main.yml as follows:
 
-```markdown
+```
 ---
 - name: Install Java
   become: true
