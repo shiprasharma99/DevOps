@@ -1,9 +1,9 @@
-Module-6: Ansible Assignment - 4 
+# Module-6: Ansible Assignment - 4 
 You have been asked to: 
-● Use the previous deployment of ansible cluster 
-● Configure the files folder in “ansible-new” role with index.html which should be replaced 
+### 1. Use the previous deployment of ansible cluster 
+### 2. Configure the files folder in “ansible-new” role with index.html which should be replaced 
 with the original index.html 
-● Configure the handlers folder in “ansible-new” role for restarting the nginx service
+### 3. Configure the handlers folder in “ansible-new” role for restarting the nginx service
 All of the above should only happen on the slave which has nginx installed
 
 

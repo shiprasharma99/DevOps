@@ -1,14 +1,15 @@
-Module-6: Ansible Assignment - 5 
+# Module-6: Ansible Assignment - 5 
 You have been asked to: 
-● Create a new deployment of ansible cluster of 5 nodes 
-● Label 2 nodes as test and other 2 as prod 
-● Install java on test nodes 
-● Install mysql-server on prod nodes 
+### 1. Create a new deployment of ansible cluster of 5 nodes 
+### 2. Label 2 nodes as test and other 2 as prod 
+### 3. Install java on test nodes 
+### 4. Install mysql-server on prod nodes 
 Use Anisble roles for the above, group the hosts under test and prod
 
 
-Create an inventory file to define the target hosts and group them as test and prod:
+Step 1: Create an inventory file to define the target hosts and group them as test and prod:
 
+```markdown
 [test]
 test_node_1
 test_node_2
@@ -16,10 +17,12 @@ test_node_2
 [prod]
 prod_node_1
 prod_node_2
+```
 
-Create a role called ansible-java to install Java on test nodes
+Step 2: Create a role called ansible-java to install Java on test nodes
 i defined the tasks for installing Java in ansible-java/tasks/main.yml as follows:
 
+```css
 ---
 - name: Install Java
   become: true
@@ -27,9 +30,11 @@ i defined the tasks for installing Java in ansible-java/tasks/main.yml as follow
     name: default-jdk
     state: present
 
-Create another role called ansible-mysql to install MySQL on prod nodes
+```
+Step 3: Create another role called ansible-mysql to install MySQL on prod nodes
 i defined the tasks for installing MySQL in ansible-mysql/tasks/main.yml as follows:
 
+```css
 ---
 - name: Install MySQL Server
   become: true
@@ -37,9 +42,11 @@ i defined the tasks for installing MySQL in ansible-mysql/tasks/main.yml as foll
     name: mysql-server
     state: present
 
-Create a playbook called deployment.yml to deploy the roles on the target hosts based on the group
+```
+Step 4: Create a playbook called deployment.yml to deploy the roles on the target hosts based on the group
 i defined the playbook as follows:
 
+```css
 ---
 - name: Deploy roles
   hosts: all
@@ -48,9 +55,12 @@ i defined the playbook as follows:
     - { role: ansible-java, when: "'test' in group_names" }
     - { role: ansible-mysql, when: "'prod' in group_names" }
 
+```
 Finally, i executed the playbook using the ansible-playbook command as follows:
 
+```bash
 ansible-playbook -i <path-to-inventory-file> deployment.yml
+```
 
 
 
