@@ -1,4 +1,5 @@
-module-2: git assignment -2
+# module-2: git assignment -2
+
 
 1. i am naming my working directory as "work"
 create a new directory named "work" by using command 
